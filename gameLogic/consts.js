@@ -1,2 +1,2 @@
-const DARK = "dark"
-const LIGHT = "light"
+const DARK = "dark";
+const LIGHT = "light";
