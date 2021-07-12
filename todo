@@ -1,6 +1,6 @@
--condizioni di vittoria
--refactoring
--shaders con varie luci
+-refactoring (maybe??)
+-esportare parametri fs
+-fissare luci (tutti i tipi)
 -background
 -freccie e rotazione ???
 -legenda o simili
