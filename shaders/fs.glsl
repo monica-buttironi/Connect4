@@ -16,34 +16,62 @@ vec4 ambColor = vec4(0.33, 0.33, 0.33, 1.0);		// material ambient color
 vec4 specularColor = vec4(0.76, 0.57, 0.41, 1.0);		// specular color
 
 // Lighr directions can be found into:
-vec3 lightDirA = vec3(1.0, 0.0, 0.0);
-vec3 lightDirB = vec3(0.0, 1.0, 0.0);
-vec3 lightDirC = vec3(0.0, 0.0, 1.0);
+uniform vec3 lightDirA;
+uniform vec3 lightPosB;
+uniform vec3 lightDirC;
+uniform vec3 lightPosC;
 //
 //and intensity is returned into:
 //
-vec4 lightColorA = vec4(0.9, 0.0, 0.0, 0.3);
-vec4 lightColorB = vec4(0.0, 0.9, 0.0, 0.3);
-vec4 lightColorC = vec4(0.0, 0.0, 0.9, 0.3);
+uniform vec4 lightColorA;
+uniform vec4 lightColorB;
+uniform vec4 lightColorC;
 //
 // Ambient light contribution can be found intop
 //
-vec4 ambientLight = vec4(0.9, 0.0, 0.0, 0.3);
+vec4 ambientLight = vec4(1.0, 1.0, 1.0, 0.1);
+
+// light decays
+uniform float decayB;
+uniform float decayC;
+
+// cones
+uniform float ConeInC;
+uniform float ConeOutC;
+
+// on off
+uniform float isLightOnA;
+uniform float isLightOnB;
+uniform float isLightOnC;
+
+float Target = 4.0;
 
 void main() {
   vec3 nEyeDirection = normalize(eyePosition - fsPosition);
-  vec3 nLightDirectionA = normalize(-lightDirA);
-  vec3 nLightDirectionB = normalize(-lightDirB);
-  vec3 nLightDirectionC = normalize(-lightDirC);
+  // direct
+  vec3 nLightDirectionA = normalize(lightDirA);
+  // point
+  vec3 nLightDirectionB = normalize(lightPosB - fsPosition);
+  // spot
+  vec3 nLightDirectionC = normalize(lightPosC - fsPosition);
+  
   vec3 nNormal = normalize(fsNormal);
 
-  vec4 LAcontr = clamp(dot(lightDirA, nNormal),0.0,1.0) * lightColorA;
-  vec4 LBcontr = clamp(dot(lightDirB, nNormal),0.0,1.0) * lightColorB;
-  vec4 LCcontr = clamp(dot(lightDirC, nNormal),0.0,1.0) * lightColorC;
-  vec4 SpecA = specularColor * pow(clamp(dot(nEyeDirection, -reflect(nLightDirectionA, nNormal )), 0.0, 1.0), SpecShine) * lightColorA;
-  vec4 SpecB = specularColor * pow(clamp(dot(nEyeDirection, -reflect(nLightDirectionB, nNormal )), 0.0, 1.0), SpecShine) * lightColorB;
-  vec4 SpecC = specularColor * pow(clamp(dot(nEyeDirection, -reflect(nLightDirectionC, nNormal )), 0.0, 1.0), SpecShine) * lightColorC;
+  // direct
+  vec4 LAcontr = isLightOnA * (clamp(dot(lightDirA, nNormal),0.0,1.0) * lightColorA);
+  // spot
+  vec4 LBcontr = isLightOnB * pow((Target / length(lightPosB - fsPosition)), decayB) * lightColorB;
+  // point
+  float cosa = dot(nLightDirectionC, lightDirC);
+	float cout = cos(radians(ConeOutC/2.0));
+	float cin = cos(radians(ConeInC * ConeOutC/2.0));
+	float res = (cosa - cout)/(cin - cout);
+  vec4 LCcontr = isLightOnC *  lightColorC * pow((Target / length(lightPosC - fsPosition)), decayC) * clamp(res, 0.0, 1.0);
+  
+  vec4 SpecA = isLightOnA * specularColor * pow(clamp(dot(nEyeDirection, -reflect(nLightDirectionA, nNormal )), 0.0, 1.0), SpecShine) * lightColorA;
+  vec4 SpecB = isLightOnB * specularColor * pow(clamp(dot(nEyeDirection, -reflect(nLightDirectionB, nNormal )), 0.0, 1.0), SpecShine) * lightColorB;
+  vec4 SpecC = isLightOnC * specularColor * pow(clamp(dot(nEyeDirection, -reflect(nLightDirectionC, nNormal )), 0.0, 1.0), SpecShine) * lightColorC;
 
-  outColor = clamp(diffColor * (LAcontr + LBcontr + LCcontr) + SpecA + SpecB + SpecC + ambientLight * ambColor, 0.0, 1.0) * texture(u_texture, uvFS);
+  outColor = vec4(clamp(diffColor * (LAcontr + LBcontr + LCcontr) + SpecA + SpecB + ambientLight * ambColor, 0.0, 1.0).rgb, 1.0) * texture(u_texture, uvFS);
   //outColor = texture(u_texture, uvFS);
 }

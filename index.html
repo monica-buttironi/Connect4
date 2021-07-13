@@ -8,8 +8,49 @@
         margin: 0;
         background-color: gray;
       }
+      #container {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+      }
+      #canvasContainer {
+        flex: 1;
+      }
+      #controlsContainer {
+        width: 300px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: rgba(85, 85, 85, 0.5);
+        padding-left: 12px;
+        padding-right: 12px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+      }
+      .light {
+        margin: 4px;
+        color: black;
+        font-weight: bold;
+      }
+      .lightContainer {
+        display: flex;
+        flex-direction: column;
+      }
+      .row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+      .w-25 {
+        width: 25%;
+      }
+      .values {
+        padding-left: 8px;
+      }
       canvas {
         display: block;
+        width: 100%;
         background-color: white;
       }
     </style>
@@ -21,10 +62,230 @@
     <script type="text/javascript" src="gameLogic/consts.js"></script>
     <script type="text/javascript" src="gameLogic/Piece.js"></script>
     <script type="text/javascript" src="lib/utils.js"></script>
+    <script type="text/javascript" src="lib/lights.js"></script>
     <script type="text/javascript" src="lib/script.js"></script>
   </head>
 
   <body>
-    <canvas id="c"></canvas>
+    <div id="container">
+      <div id="controlsContainer">
+        <div class="lightContainer">
+          <div class="row">
+            <input type="checkbox" name="isLightAOn" id="isLightAOn" checked />
+            <p class="light">Light A (directional)</p>
+          </div>
+          <div class="row">
+            <span class="w-25">Color:</span>
+            <input
+              type="color"
+              name="lightColorA"
+              id="lightColorA"
+              value="#ffffff"
+            />
+          </div>
+          <div class="row">
+            <span class="w-25">Dir &theta;:</span>
+            <input
+              type="range"
+              name="lightDirThetaA"
+              id="lightDirThetaA"
+              min="0"
+              max="180"
+              value="0"
+            />
+            <span class="values" id="thetaA"></span>
+          </div>
+          <div class="row">
+            <span class="w-25">Dir &phi;:</span>
+            <input
+              type="range"
+              name="lightDirPhiA"
+              id="lightDirPhiA"
+              min="-180"
+              max="180"
+              value="0"
+            />
+            <span class="values" id="phiA"></span>
+          </div>
+        </div>
+        <div class="lightContainer">
+          <div class="row">
+            <input type="checkbox" name="isLightBOn" id="isLightBOn" checked />
+            <p class="light">Light B (point)</p>
+          </div>
+          <div class="row">
+            <span class="w-25">Color:</span>
+            <input
+              type="color"
+              name="lightColorB"
+              id="lightColorB"
+              value="#ffffff"
+            />
+          </div>
+          <div class="row">
+            <span class="w-25">Pos X:</span>
+            <input
+              type="range"
+              name="lightPosXB"
+              id="lightPosXB"
+              min="-250"
+              max="250"
+              value="0"
+            />
+            <span class="values" id="posXB"></span>
+          </div>
+          <div class="row">
+            <span class="w-25">Pos Y: </span>
+            <input
+              type="range"
+              name="lightPosYB"
+              id="lightPosYB"
+              min="-250"
+              max="250"
+              value="60"
+            />
+            <span class="values" id="posYB"></span>
+          </div>
+          <div class="row">
+            <span class="w-25">Pos Z:</span>
+            <input
+              type="range"
+              name="lightPosZB"
+              id="lightPosZB"
+              min="-250"
+              max="250"
+              value="0"
+            />
+            <span class="values" id="posZB"></span>
+          </div>
+          <div class="row">
+            <span class="w-25">Decay:</span>
+            <input
+              type="range"
+              name="lightDecayB"
+              id="lightDecayB"
+              min="0"
+              max="2"
+              value="1"
+            />
+            <span class="values" id="decayB"></span>
+          </div>
+        </div>
+
+        <div class="lightContainer">
+          <div class="row">
+            <input type="checkbox" name="isLightCOn" id="isLightCOn" checked />
+            <p class="light">Light C (spot)</p>
+          </div>
+          <div class="row">
+            <span class="w-25">Color:</span>
+            <input
+              type="color"
+              name="lightColorC"
+              id="lightColorC"
+              value="#ffffff"
+            />
+          </div>
+          <div class="row">
+            <span class="w-25">Pos X:</span>
+            <input
+              type="range"
+              name="lightPosXC"
+              id="lightPosXC"
+              min="-250"
+              max="250"
+              value="0"
+            />
+            <span class="values" id="posXC"></span>
+          </div>
+          <div class="row">
+            <span class="w-25">Pos Y:</span>
+            <input
+              type="range"
+              name="lightPosYC"
+              id="lightPosYC"
+              min="-250"
+              max="250"
+              value="60"
+            />
+            <span class="values" id="posYC"></span>
+          </div>
+          <div class="row">
+            <span class="w-25">Pos Z:</span>
+            <input
+              type="range"
+              name="lightPosZC"
+              id="lightPosZC"
+              min="-250"
+              max="250"
+              value="0"
+            />
+            <span class="values" id="posZC"></span>
+          </div>
+
+          <div class="row">
+            <span class="w-25">Dir &theta;:</span>
+            <input
+              type="range"
+              name="lightDirThetaC"
+              id="lightDirThetaC"
+              min="0"
+              max="180"
+              value="0"
+            />
+            <span class="values" id="thetaC"></span>
+          </div>
+          <div class="row">
+            <span class="w-25">Dir &phi;:</span>
+            <input
+              type="range"
+              name="lightDirPhiC"
+              id="lightDirPhiC"
+              min="-180"
+              max="180"
+              value="0"
+            />
+            <span class="values" id="phiC"></span>
+          </div>
+          <div class="row">
+            <span class="w-25">Cone In:</span>
+            <input
+              type="range"
+              name="lightConeInC"
+              id="lightConeInC"
+              min="0"
+              max="100"
+              value="65"
+            />
+            <span class="values" id="coneInC"></span>
+          </div>
+          <div class="row">
+            <span class="w-25">Cone Out:</span>
+            <input
+              type="range"
+              name="lightConeOutC"
+              id="lightConeOutC"
+              min="0"
+              max="150"
+              value="75"
+            />
+            <span class="values" id="coneOutC"></span>
+          </div>
+          <div class="row">
+            <span class="w-25">Decay:</span>
+            <input
+              type="range"
+              name="lightDecayC"
+              id="lightDecayC"
+              min="0"
+              max="2"
+              value="1"
+            />
+            <span class="values" id="decayC"></span>
+          </div>
+        </div>
+      </div>
+      <div id="canvasContainer"><canvas id="c"></canvas></div>
+    </div>
   </body>
 </html>
