@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/png" href="./assets/logo.png">
+    <link rel="icon" type="image/png" href="./assets/logo2.jpg" />
     <style type="text/css">
       body {
         margin: 0;
@@ -17,14 +17,32 @@
       #canvasContainer {
         flex: 1;
       }
+      #legendContainer {
+        width: 200px;
+        position: absolute;
+        top: 210px;
+        left: 10px;
+        background-color: rgba(255, 255, 255, 0.5);
+        box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.75);
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+      }
       #controlsContainer {
-        width: 300px;
+        width: 250px;
         position: absolute;
         top: 10px;
         right: 10px;
-        background-color: rgba(85, 85, 85, 0.5);
+        background-color: rgba(255, 255, 255, 0.5);
+        box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.75);
         padding-left: 12px;
         padding-right: 12px;
+        padding-top: 6px;
+        padding-bottom: 6px;
         border-radius: 12px;
         display: flex;
         flex-direction: column;
@@ -46,14 +64,23 @@
       .w-25 {
         width: 25%;
       }
+      .w-50 {
+        width: 50%;
+      }
+      .w-60 {
+        width: 60%;
+      }
+      .w-40 {
+        width: 40%;
+      }
       .values {
         padding-left: 8px;
       }
       canvas {
         display: block;
         width: 100%;
-        background-image: url("./assets/background.jpg");
-        background-repeat: no-repeat; 
+        background-image: url("./assets/background1.jpg");
+        background-repeat: no-repeat;
         background-size: cover;
       }
       #winModalContainer {
@@ -76,6 +103,7 @@
         border: 1px solid #888;
         border-radius: 12px;
         width: 50%;
+        border: 2px solid black;
       }
 
       #modalCloseButton {
@@ -93,6 +121,23 @@
       }
       #winText {
         text-align: center;
+        background: -webkit-linear-gradient(red,blue);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      #logoContainer {
+        width: 200px;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+      }
+      #logo {
+        width: 200px;
+        height: 200px;
+      }
+      .paddedRow {
+        padding-top: 3px;
+        padding-bottom: 3px;
       }
     </style>
 
@@ -108,6 +153,44 @@
 
   <body>
     <div id="container">
+      <div id="logoContainer">
+        <img src="./assets/Logo3.png" alt="logo" id="logo" />
+      </div>
+
+      <div id="legendContainer">
+        <div class="row paddedRow">
+          <span class="w-60">Restart game:</span>
+          <span class="w-40"><b>F5</b></span>
+        </div>
+        <div class="row paddedRow">
+          <span class="w-60">Move piece upward:</span>
+          <span class="w-40">🡱</span>
+        </div>
+        <div class="row paddedRow">
+          <span class="w-60">Move piece downward:</span>
+          <span class="w-40">🡳</span>
+        </div>
+        <div class="row paddedRow">
+          <span class="w-60">Move piece to left:</span>
+          <span class="w-40">🡰</span>
+        </div>
+        <div class="row paddedRow">
+          <span class="w-60">Move piece to right:</span>
+          <span class="w-40">🡲</span>
+        </div>
+        <div class="row paddedRow">
+          <span class="w-60">Place piece:</span>
+          <span class="w-40"><b>Enter</b></span>
+        </div>
+        <div class="row paddedRow">
+          <span class="w-60">Zoom:</span>
+          <span class="w-40"><b>Mouse wheel</b></span>
+        </div>
+        <div class="row paddedRow">
+          <span class="w-60">Rotate:</span>
+          <span class="w-40"><b>Mouse hold and move</b></span>
+        </div>
+      </div>
       <div id="controlsContainer">
         <div class="lightContainer">
           <div class="row">
@@ -329,9 +412,9 @@
       <div id="winModalContainer">
         <div id="winModal">
           <span id="modalCloseButton">&times;</span>
-          <p id="winText">
+          <h3 id="winText">
             <b>Congratulations!!<br />You won the match!</b>
-          </p>
+          </h3>
         </div>
       </div>
     </div>
