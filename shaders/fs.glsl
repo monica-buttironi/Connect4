@@ -9,7 +9,7 @@ out vec4 outColor;
 uniform sampler2D u_texture;
 uniform vec3 eyePosition;
 
-float SpecShine = 0.5;		// specular coefficient for both Blinn and Phong
+float SpecShine = 10.0;		// specular coefficient for both Blinn and Phong
 
 vec4 diffColor = vec4(0.53, 0.31, 0.13, 1.0);		// diffuse color
 vec4 ambColor = vec4(0.33, 0.33, 0.33, 1.0);		// material ambient color
@@ -58,20 +58,20 @@ void main() {
   vec3 nNormal = normalize(fsNormal);
 
   // direct
-  vec4 LAcontr = isLightOnA * (clamp(dot(lightDirA, nNormal),0.0,1.0) * lightColorA);
+  vec4 LAcontr = isLightOnA * (clamp(dot(nLightDirectionA, nNormal),0.0,1.0) * lightColorA);
   // spot
-  vec4 LBcontr = isLightOnB * pow((Target / length(lightPosB - fsPosition)), decayB) * lightColorB;
+  vec4 LBcontr = isLightOnB * pow((Target / length(lightPosB - fsPosition)), decayB) * lightColorB * clamp(dot(nLightDirectionB, nNormal),0.0,1.0);
   // point
   float cosa = dot(nLightDirectionC, lightDirC);
 	float cout = cos(radians(ConeOutC/2.0));
 	float cin = cos(radians(ConeInC * ConeOutC/2.0));
 	float res = (cosa - cout)/(cin - cout);
-  vec4 LCcontr = isLightOnC *  lightColorC * pow((Target / length(lightPosC - fsPosition)), decayC) * clamp(res, 0.0, 1.0);
+  vec4 LCcontr = isLightOnC * lightColorC * pow((Target / length(lightPosC - fsPosition)), decayC) * clamp(res, 0.0, 1.0) * clamp(dot(nLightDirectionC, nNormal),0.0,1.0);
   
   vec4 SpecA = isLightOnA * specularColor * pow(clamp(dot(nEyeDirection, -reflect(nLightDirectionA, nNormal )), 0.0, 1.0), SpecShine) * lightColorA;
-  vec4 SpecB = isLightOnB * specularColor * pow(clamp(dot(nEyeDirection, -reflect(nLightDirectionB, nNormal )), 0.0, 1.0), SpecShine) * lightColorB;
-  vec4 SpecC = isLightOnC * specularColor * pow(clamp(dot(nEyeDirection, -reflect(nLightDirectionC, nNormal )), 0.0, 1.0), SpecShine) * lightColorC;
+  vec4 SpecB = isLightOnB * specularColor * pow(clamp(dot(nEyeDirection, -reflect(nLightDirectionB, nNormal )), 0.0, 1.0), SpecShine) * pow((Target / length(lightPosB - fsPosition)), decayB) * lightColorB;
+  vec4 SpecC = isLightOnC * specularColor * pow(clamp(dot(nEyeDirection, -reflect(nLightDirectionC, nNormal )), 0.0, 1.0), SpecShine) * lightColorC * pow((Target / length(lightPosC - fsPosition)), decayC) * clamp(res, 0.0, 1.0);
 
-  outColor = vec4(clamp(diffColor * (LAcontr + LBcontr + LCcontr) + SpecA + SpecB + ambientLight * ambColor, 0.0, 1.0).rgb, 1.0) * texture(u_texture, uvFS);
+  outColor = vec4(clamp(diffColor * (LAcontr + LBcontr + LCcontr) + SpecA + SpecB + SpecC + ambientLight * ambColor, 0.0, 1.0).rgb, 1.0) * texture(u_texture, uvFS);
   //outColor = texture(u_texture, uvFS);
 }
