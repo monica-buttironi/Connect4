@@ -9,26 +9,21 @@ out vec4 outColor;
 uniform sampler2D u_texture;
 uniform vec3 eyePosition;
 
-float SpecShine = 10.0;		// specular coefficient for both Blinn and Phong
+float SpecShine = 10.0;
 
-vec4 diffColor = vec4(0.53, 0.31, 0.13, 1.0);		// diffuse color
-vec4 ambColor = vec4(0.33, 0.33, 0.33, 1.0);		// material ambient color
-vec4 specularColor = vec4(0.76, 0.57, 0.41, 1.0);		// specular color
+vec4 diffColor = vec4(0.53, 0.31, 0.13, 1.0);		
+vec4 ambColor = vec4(0.33, 0.33, 0.33, 1.0);
+vec4 specularColor = vec4(0.76, 0.57, 0.41, 1.0);
 
-// Lighr directions can be found into:
 uniform vec3 lightDirA;
 uniform vec3 lightPosB;
 uniform vec3 lightDirC;
 uniform vec3 lightPosC;
-//
-//and intensity is returned into:
-//
+
 uniform vec4 lightColorA;
 uniform vec4 lightColorB;
 uniform vec4 lightColorC;
-//
-// Ambient light contribution can be found intop
-//
+
 vec4 ambientLight = vec4(1.0, 1.0, 1.0, 0.1);
 
 // light decays
@@ -73,5 +68,4 @@ void main() {
   vec4 SpecC = isLightOnC * specularColor * pow(clamp(dot(nEyeDirection, -reflect(nLightDirectionC, nNormal )), 0.0, 1.0), SpecShine) * lightColorC * pow((Target / length(lightPosC - fsPosition)), decayC) * clamp(res, 0.0, 1.0);
 
   outColor = vec4(clamp(diffColor * (LAcontr + LBcontr + LCcontr) + SpecA + SpecB + SpecC + ambientLight * ambColor, 0.0, 1.0).rgb, 1.0) * texture(u_texture, uvFS);
-  //outColor = texture(u_texture, uvFS);
 }
