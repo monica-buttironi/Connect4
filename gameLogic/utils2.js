@@ -11,7 +11,7 @@ function calcNextY(x, z, state) {
 }
 
 function checkEndConditions(state) {
-  if (state.length < 7) return false;
+  if (state.length < 1) return false;
 
   const lastColor = state[state.length - 1].color;
   const winningCandidate = state.filter((p) => p.color === lastColor);
@@ -25,7 +25,6 @@ function checkEndConditions(state) {
   const maxXY = _.max(Object.values(byXY).map((group) => group.length));
   const maxYZ = _.max(Object.values(byYZ).map((group) => group.length));
 
-  //console.log("maxXZ", maxXZ, "maxXY", maxXY, "maxYZ", maxYZ)
   if (maxXY === 4 || maxXZ === 4 || maxYZ === 4) {
     return true;
   }
@@ -38,14 +37,36 @@ function checkEndConditions(state) {
   let onDiagonalX = _.max(
     Object.values(byX).map((group) => group.filter((c) => c.z === c.y).length)
   );
+  let onInverseDiagonalX = _.max(
+    Object.values(byX).map(
+      (group) => group.filter((c) => c.z === 3 - c.y).length
+    )
+  );
   let onDiagonalY = _.max(
     Object.values(byY).map((group) => group.filter((c) => c.x === c.z).length)
+  );
+  let onInverseDiagonalY = _.max(
+    Object.values(byY).map(
+      (group) => group.filter((c) => c.x === 3 - c.z).length
+    )
   );
   let onDiagonalZ = _.max(
     Object.values(byZ).map((group) => group.filter((c) => c.y === c.x).length)
   );
+  let onInverseDiagonalZ = _.max(
+    Object.values(byZ).map(
+      (group) => group.filter((c) => c.y === 3 - c.x).length
+    )
+  );
 
-  if (onDiagonalX === 4 || onDiagonalY === 4 || onDiagonalZ === 4) {
+  if (
+    onDiagonalX === 4 ||
+    onInverseDiagonalX === 4 ||
+    onDiagonalY === 4 ||
+    onInverseDiagonalY === 4 ||
+    onDiagonalZ === 4 ||
+    onInverseDiagonalZ === 4
+  ) {
     return true;
   }
 
@@ -67,7 +88,7 @@ function checkEndConditions(state) {
     (c) => c.z === 3 - c.x && c.x === c.y
   ).length;
 
-  if(sameXYZ === 4 || sameXY === 4 || sameXZ === 4 || sameYZ === 4) {
+  if (sameXYZ === 4 || sameXY === 4 || sameXZ === 4 || sameYZ === 4) {
     return true;
   }
 

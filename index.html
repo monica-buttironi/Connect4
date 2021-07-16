@@ -110,7 +110,7 @@
         background-repeat: no-repeat;
         background-size: cover;
       }
-      #winModalContainer {
+      .modalContainer {
         display: none;
         position: fixed;
         z-index: 1;
@@ -122,7 +122,7 @@
         background-color: rgba(0, 0, 0, 0.4);
       }
 
-      #winModal {
+      .modal {
         background-color: #fefefe;
         margin: 15% auto;
         padding: 20px;
@@ -132,15 +132,15 @@
         border: 2px solid black;
       }
 
-      #modalCloseButton {
+      .modalCloseButton {
         color: #aaaaaa;
         float: right;
         font-size: 28px;
         font-weight: bold;
       }
 
-      #modalCloseButton:hover,
-      #modalCloseButton:focus {
+      .modalCloseButton:hover,
+      .modalCloseButton:focus {
         color: #000080;
         text-decoration: none;
         cursor: pointer;
@@ -151,6 +151,9 @@
         background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+      }
+      #drawText {
+        text-align: center;
       }
       #logoContainer {
         width: 200px;
@@ -473,11 +476,21 @@
         <button id="restartButton" disabled>Play again!</button>
       </div>
       <div id="canvasContainer"><canvas id="c"></canvas></div>
-      <div id="winModalContainer">
-        <div id="winModal">
-          <span id="modalCloseButton">&times;</span>
+      <div id="winModalContainer" class="modalContainer">
+        <div id="winModal" class="modal">
+          <span id="modalCloseButton" class="modalCloseButton">&times;</span>
           <h3 id="winText">
             <b>Congratulations!!<br />You won the match!</b>
+          </h3>
+        </div>
+      </div>
+      <div class="modalContainer" id="drawModalContainer">
+        <div id="drawModal" class="modal">
+          <span id="drawModalCloseButton" class="modalCloseButton">
+            &times;
+          </span>
+          <h3 id="drawText">
+            <b>Draw!</b>
           </h3>
         </div>
       </div>
