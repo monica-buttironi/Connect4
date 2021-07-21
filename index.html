@@ -18,7 +18,7 @@
         flex: 1;
       }
       #legendContainer {
-        width: 200px;
+        width: 230px;
         position: absolute;
         top: 210px;
         left: 10px;
@@ -176,6 +176,14 @@
         height: 2px;
         border-top: 2px dotted black;
       }
+      #changeBackground {
+        padding: 6px;
+        border-radius: 50px;
+        font-weight: bold;
+        border: black 2px solid;
+        cursor: pointer;
+        box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.75);
+      }
       #restartButton {
         padding: 6px;
         border-radius: 50px;
@@ -255,6 +263,8 @@
           <span class="w-60">Rotate:</span>
           <span class="w-40"><b>Mouse hold and move</b></span>
         </div>
+        <div class="separator"></div>
+        <button id="changeBackground">Change background</button>
       </div>
       <div id="controlsContainer">
         <div class="lightContainer">
